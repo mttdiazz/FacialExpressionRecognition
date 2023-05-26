@@ -2,8 +2,8 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # Define the paths to your training and testing data directories
-trainingDataDir = '/Users/mateo/Documents/Mateo/FacialExpressionsRecognition/FacialExpression/train'
-testingDataDir = '/Users/mateo/Documents/Mateo/FacialExpressionsRecognition/FacialExpression/test'
+trainingDataDir = '/Users/mateo/Documents/Mateo/FacialExpressionRecognition/FacialExpression/train'
+testingDataDir = '/Users/mateo/Documents/Mateo/FacialExpressionRecognition/FacialExpression/test'
 
 # Set the input image dimensions and other hyperparameters
 img_width, img_height = 48, 48
@@ -51,14 +51,21 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.MaxPooling2D(2, 2),
     tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
     tf.keras.layers.MaxPooling2D(2, 2),
+    tf.keras.layers.Conv2D(256, (3, 3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2, 2),
     tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(64, activation='relu'),
     tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(7, activation='softmax')
 ])
 
-# Compile the model
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Compile the model with a custom learning rate
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
+
 
 # Train the model
 model.fit(
