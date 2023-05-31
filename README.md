@@ -20,9 +20,9 @@ To run the project, follow these steps:
 ## Usage
 
 1. Ensure that the dataset is organized into separate folders, each corresponding to a specific facial expression.
-2. Run the main script `facial_expression_recognition.py` to train the neural network and evaluate its performance on the testing data.
+2. Run the main script `neuralNetwork.py` to train the neural network and evaluate its performance on the testing data.
 
-`python facial_expression_recognition.py`
+`python neuralNetwork.py`
 
 
 ## Training Process
@@ -37,7 +37,7 @@ The model's performance is evaluated using metrics such as loss and accuracy. Th
 
 ## Model Visualization
 
-The project includes a feature to visualize the learned features or activations of the model's layers using Grad-CAM. This visualization provides insights into what the model focuses on when recognizing facial expressions.
+Future versions of the project will include a feature to visualize the learned features or activations of the model's layers using Grad-CAM. This visualization provides insights into what the model focuses on when recognizing facial expressions.
 
 ## Results
 
