@@ -1,5 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization
 
 # Define the paths to your training and testing data directories
 trainingDataDir = '/Users/mateo/Documents/Mateo/FacialExpressionRecognition/FacialExpression/train'
@@ -45,32 +47,41 @@ validation_generator = train_datagen.flow_from_directory(
     shuffle=True
 )
 
-# Define the model architecture
-model = tf.keras.models.Sequential([
-    tf.keras.layers.Conv2D(64, (3, 3), activation='relu', input_shape=(img_width, img_height, 1)),
-    tf.keras.layers.MaxPooling2D(2, 2),
-    tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2, 2),
-    tf.keras.layers.Conv2D(256, (3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2, 2),
-    tf.keras.layers.Conv2D(512, (3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2, 2),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(256, activation='relu'),
-    tf.keras.layers.Dropout(0.5),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dropout(0.5),
-    tf.keras.layers.Dense(7, activation='softmax')
+# Define the upgraded model architecture
+model = Sequential([
+    Conv2D(64, (3, 3), activation='relu', input_shape=(img_width, img_height, 1)),
+    BatchNormalization(),
+    Conv2D(64, (3, 3), activation='relu'),
+    BatchNormalization(),
+    MaxPooling2D(2, 2),
+    Dropout(0.25),
+
+    Conv2D(128, (3, 3), activation='relu'),
+    BatchNormalization(),
+    Conv2D(128, (3, 3), activation='relu'),
+    BatchNormalization(),
+    MaxPooling2D(2, 2),
+    Dropout(0.25),
+
+    Conv2D(256, (3, 3), activation='relu'),
+    BatchNormalization(),
+    Conv2D(256, (3, 3), activation='relu'),
+    BatchNormalization(),
+    MaxPooling2D(2, 2),
+    Dropout(0.25),
+
+    Flatten(),
+    Dense(512, activation='relu'),
+    BatchNormalization(),
+    Dropout(0.5),
+    Dense(7, activation='softmax')
 ])
 
-
-
-# Compile the model with a custom learning rate
+# Compile the upgraded model
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
 model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
 
-
-# Train the model
+# Train the upgraded model
 model.fit(
     train_generator,
     steps_per_epoch=train_generator.samples // batch_size,
@@ -79,10 +90,10 @@ model.fit(
     validation_steps=validation_generator.samples // batch_size
 )
 
-# Save the model
-model.save('FacialExpressionModel.h5')
+# Save the upgraded model
+model.save('FacialExpressionModel_Upgraded.h5')
 
-# Evaluate the model on the testing data
+# Evaluate the upgraded model on the testing data
 test_generator = test_datagen.flow_from_directory(
     testingDataDir,
     target_size=(img_width, img_height),
